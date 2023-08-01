@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .thickHr {
+        height: 2px;
+        border-width: 0;
+        color: black;
+        background-color: black;
+      }
+
+      img {
+        margin: 7px 0px 7px 100px;
+      }
+
+      .content {
+        width: 800px;
+        margin: 0 auto;
+      }
+
+      .sectionBox {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .clickable-image {
+        width: 250px;
+        height: auto;
+        cursor: pointer;
+      }
+
+      .popup {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+
+      .popup-image {
+        margin: 15% auto;
+        display: block;
+        width: 80%;
+        max-width: 700px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <h1>Setting up Tree View</h1>
+      <hr class="thickHr">
+      <div class="sectionBox">
+        <div>
+          <h3>TSV table layout </h3>
+          <p>1. Populate table: </p>
+          <ul>
+            <li> Column 1 = Item Name</li>
+            <li> Column 2 = Indentation*</li>
+            <li> Column 3 = Text</li>
+            <li> Column 4 = Image LInk</li>
+          </ul>
+          <p>*Negative values un-indent. <br> *Leave empty to accumulate a series. </p>
+        </div>
+        <div>
+          <img class="clickable-image" src="https://i.pinimg.com/originals/36/e9/6e/36e96e6cf1379f28a1d0b447673c8152.png" alt="An image to click on">
+        </div>
+      </div>
+      <hr class="thickHr">
+      <div class="sectionBox">
+        <div>
+          <h3>Host TSV (Shown here using Google Sheets)</h3>
+          <p>2. Go to: File > Share > Publish to web</p>
+        </div>
+        <div>
+          <img class="clickable-image" src="https://i.pinimg.com/originals/c9/4f/0e/c94f0ee4fb5f2b6367d2e4ce9d646edb.png" alt="And another image to click on">
+        </div>
+      </div>
+      <hr>
+      <div class="sectionBox">
+        <div>
+          <p>3. Go to: Web Page > Tab-separated Values</p>
+          <p>4. Click: Publish</p>
+        </div>
+        <div>
+          <img class="clickable-image" src="https://i.pinimg.com/originals/fb/4f/aa/fb4faae1d6559ef3ab4b848dcdaf820f.png" alt="Another image to click on">
+        </div>
+      </div>
+      <hr>
+      <div class="sectionBox">
+        <div>
+          <p>5. Copy: provided link</p>
+        </div>
+        <div>
+          <img class="clickable-image" src="https://i.pinimg.com/originals/ff/99/b2/ff99b2273ff2e2f0c4fd4fa871ff9237.png" alt="An image to click on">
+        </div>
+      </div>
+      <hr class="thickHr">
+      <div class="sectionBox">
+        <div>
+          <h3>Load into View Tree</h3>
+          <p> 6. Open: <a href="https://htmlpreview.github.io/?https://github.com/sequence345/Tree-View/blob/main/index.html" target="_blank">Tree View</a>
+          </p>
+          <p> 7. Paste link into the input field </p>
+          <p> 8. Click 'Load'</p>
+        </div>
+        <div>
+          <img class="clickable-image" src="https://i.pinimg.com/originals/4e/c1/57/4ec157f44ee1c9713011bef02188938e.png" alt="An image to click on">
+        </div>
+      </div>
+      <div id="popup" class="popup">
+        <img id="popup-image" class="popup-image">
+      </div>
+    </div>
+    <script>
+      window.onload = function() {
+        const images = document.getElementsByClassName('clickable-image');
+        const popup = document.getElementById('popup');
+        const popupImage = document.getElementById('popup-image');
+        Array.from(images).forEach((image) => {
+          image.addEventListener('click', function() {
+            popup.style.display = "block";
+            popupImage.src = this.src;
+          });
+        });
+        popup.addEventListener('click', function() {
+          this.style.display = "none";
+        });
+      }
+    </script>
+  </body>
+</html>
