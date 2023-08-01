@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+
+      h1 {
+        margin: 0;
+        padding: 0;
+        font-size: 1.2em;
+        color: #ccc;
+      }
+
+      h2 {
+        margin: 0;
+        padding: 0;
+        font-size: 1.2em;
+        line-height: 1.4em;
+      }
+
+      #container {
+        display: flex;
+        height: 100%;
+      }
+
+      #leftPortion {
+        position: relative;
+        width: 20%;
+        min-width: 230px;
+        background-color: #eee;
+        padding: 20px 0px 0px 0px;
+        overflow: auto;
+        direction: rtl;
+        display: flex;
+        flex-direction: column;
+      }
+
+      #sequence345back,
+      #sequence345front {
+        position: fixed;
+        font-weight: bold;
+        padding: 10px;
+        bottom: 0;
+        width: 20%;
+        text-align: center;
+      }
+
+      #sequence345front {
+        text-decoration: none;
+        color: transparent;
+        z-index: 99;
+      }
+
+      #sequence345front:hover {
+        color: white;
+        text-shadow: 0 0px 2px rgba(0, 0, 0, .75);
+      }
+
+      #sequence345back {
+        color: #ddd;
+      }
+
+      #rightPortion {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        min-width: 230px;
+        overflow: auto;
+        position: relative;
+      }
+
+      #sliderID {
+        width: 8px;
+        background-color: transparent;
+        cursor: col-resize;
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(20% - 4px);
+      }
+
+      #topShelf {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 12px 30px 30px 30px;
+      }
+
+      #middleShelf {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: left;
+        margin-bottom: 70px;
+      }
+
+      #pageTitle {
+        margin-right: 30px;
+      }
+
+      #bottomShelf {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: auto;
+        border-radius: 10px;
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        display: inline-flex;
+      }
+
+      #bottomShelf-container {
+        position: fixed;
+        bottom: -10px;
+        left: 20%;
+        right: 0;
+        z-index: 3;
+        display: flex;
+        justify-content: center;
+        transition: transform 0.5s ease-in-out;
+        transform: translateY(100%);
+      }
+
+      #bottomShelf-container.visible {
+        transform: translateY(-30px);
+      }
+
+      #list {
+        position: relative;
+        direction: ltr;
+        margin-bottom: 100px;
+      }
+
+      .list-item {
+        cursor: pointer;
+        margin: 0px;
+        z-index: 1;
+        padding-left: 10px;
+      }
+
+      .list-item.selected {
+        background-color: #c3e0eb;
+      }
+
+      .image-container {
+        margin-bottom: 20px;
+      }
+
+      .expand-button,
+      .expand-placeholder {
+        display: inline-block;
+        width: 20px;
+        margin-right: 5px;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        color: #999;
+        font-weight: bold;
+      }
+
+      .expand-button:hover {
+        color: black;
+      }
+
+      #rowName {
+        font-weight: bold;
+      }
+
+      #rowName span {
+        font-weight: normal;
+      }
+
+      .field-button-combo {
+        display: flex;
+        border-radius: 3px;
+        margin-right: 6px;
+        border: 1px solid #000;
+        overflow: hidden;
+      }
+
+      .help-corner {
+        display: flex;
+      }
+
+      .field-button-combo input {
+        border: none;
+        margin-right: 1px;
+      }
+
+      .field-button-combo button {
+        cursor: pointer;
+        border: none;
+      }
+
+      .field-button-combo button:hover {
+        background-color: #e5e5e5;
+      }
+
+      .field-button-combo button:active {
+        background-color: #f5f5f5;
+      }
+
+      #bottomShelf input {
+        background-color: transparent;
+        border: none;
+        font-size: 1em;
+        margin: 0px 7px;
+      }
+
+      #rowInput:disabled {
+        color: #ccc;
+      }
+
+      #bottomShelf input:enabled:hover {
+        outline: 2px solid #000;
+        border-radius: 3px;
+      }
+
+      #bottomShelf input:focus {
+        background-color: white;
+      }
+
+      #contentUnitSize {
+        color: black;
+      }
+
+      #urlInput,
+      #loadButton,
+      #helpButton,
+      #rowInput,
+      #increment,
+      #decrement {
+        height: auto;
+      }
+
+      input[type=number]::-webkit-inner-spin-button,
+      input[type=number]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      #hotSpot {
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+        bottom: 0px;
+        height: 30px;
+        padding: 0px 30px 0px 30px;
+        z-index: 4;
+      }
+
+      #hotSpot:hover {
+        height: 70px;
+      }
+
+      #increment {
+        margin: 0px 15px 0px 20px;
+      }
+
+      #decrement {
+        margin: 0px 20px 0px 15px;
+      }
+
+      input[type=number] {
+        -moz-appearance: textfield;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <div id="leftPortion">
+        <div id="sequence345back">sequence345</div>
+        <div id="list"></div>
+        <a href="https://github.com/sequence345" target="_blank" id="sequence345front">sequence345</a>
+      </div>
+      <div id="sliderID"></div>
+      <div id="rightPortion">
+        <div id="topShelf">
+          <h1 id="pageTitle"></h1>
+          <div class="help-corner">
+            <div class="field-button-combo">
+              <input type="text" id="urlInput" placeholder="Enter TSV URL here" value="https://docs.google.com/spreadsheets/d/e/2PACX-1vTIO-YYCP_lT5aAv_xUWHcJdMkmHS-MH8xUq3DT6quY4LZTjxIagcc0WFoVt-683_1XAyRuozdcF12Q/pub?output=tsv">
+              <button id="loadButton">Load</button>
+            </div>
+            <button id="helpButton">Help</button>
+          </div>
+        </div>
+        <div id="middleShelf">
+          <h2 id="rowName"></h2>
+          <p id="caption"></p>
+          <div class="image-container">
+            <img id="image" src="" alt="">
+          </div>
+        </div>
+        <div id="bottomShelf-container">
+          <div id="bottomShelf">
+            <button id="decrement" disabled>Back</button>
+            <input type="number" id="rowInput" min="1" value="1">
+            <span id="ofElement">of</span>
+            <input type="text" id="contentUnitSize" disabled>
+            <button id="increment" disabled>Next</button>
+          </div>
+        </div>
+        <div id="hotSpot"></div>
+      </div>
+    </div>
+    <script>
+      const container = document.getElementById('container');
+      const leftSide = document.getElementById('leftPortion');
+      const rightSide = document.getElementById('rightPortion');
+      const slider = document.getElementById('sliderID');
+      let isSliding = false;
+      let initialX;
+      let leftWidth;
+      let sliderOffset;
+
+      function calculatesliderOffset() {
+        const containerWidth = container.offsetWidth;
+        const leftPercentage = leftSide.offsetWidth / containerWidth;
+        const sliderOffset = containerWidth * leftPercentage;
+        return sliderOffset;
+      }
+
+      function adjustSliderPosition() {
+        const containerWidth = container.offsetWidth;
+        const leftWidth = leftSide.offsetWidth;
+        const sliderOffset = (leftWidth / containerWidth) * containerWidth - slider.offsetWidth / 2;
+        slider.style.left = sliderOffset + 'px';
+        adjustImageAndCaptionSize();
+      }
+      window.addEventListener('resize', adjustSliderPosition);
+      slider.addEventListener('mousedown', (e) => {
+        isSliding = true;
+        initialX = e.clientX;
+        leftWidth = leftSide.offsetWidth;
+        sliderOffset = calculatesliderOffset();
+      });
+      document.addEventListener('mousemove', (e) => {
+        if (!isSliding) return;
+        const dx = e.clientX - initialX;
+        const newLeftWidth = leftWidth + dx;
+        const containerWidth = container.offsetWidth;
+        const minWidth = 230;
+        const maxWidth = containerWidth - minWidth;
+        const halfSliderWidth = slider.offsetWidth / 2;
+        const minLeft = minWidth - halfSliderWidth;
+        const maxLeft = maxWidth - halfSliderWidth;
+        let newLeft = sliderOffset + dx - halfSliderWidth;
+        newLeft = Math.max(minLeft, Math.min(maxLeft, newLeft));
+        const leftPercentage = (newLeft + halfSliderWidth) / containerWidth * 100;
+        const rightPercentage = 100 - leftPercentage;
+        leftSide.style.width = leftPercentage + '%';
+        rightSide.style.width = rightPercentage + '%';
+        slider.style.left = newLeft + 'px';
+        var sequence345back = document.getElementById('sequence345back');
+        var sequence345front = document.getElementById('sequence345front');
+        sequence345back.style.width = leftSide.style.width;
+        sequence345front.style.width = leftSide.style.width;
+        document.getElementById('bottomShelf-container').style.left = newLeft + slider.offsetWidth + 'px';
+        document.getElementById('hotSpot').style.width = document.getElementById('bottomShelf').offsetWidth + 'px';
+        e.preventDefault();
+        e.stopPropagation();
+        adjustImageAndCaptionSize();
+      });
+      document.addEventListener('mouseup', () => {
+        isSliding = false;
+      });
+
+      function adjustImageAndCaptionSize() {
+        const windowHeight = window.innerHeight;
+        const windowWidth = window.innerWidth;
+        const image = document.getElementById('image');
+        const caption = document.getElementById('caption');
+        const titles = document.getElementById('rowName');
+        const originalImageWidth = image.naturalWidth;
+        const originalImageHeight = image.naturalHeight;
+        const rightSideWidth = rightSide.offsetWidth;
+        if (originalImageWidth <= 200) {
+          image.style.width = originalImageWidth + 'px';
+          image.style.height = originalImageHeight + 'px';
+          titles.style.width = '200px';
+          caption.style.width = '200px';
+        } else {
+          const aspectRatio = originalImageWidth / originalImageHeight;
+          const maxHeight = windowHeight * 0.6;
+          const maxWidth = rightSideWidth * 0.7;
+          let newWidth = Math.min(originalImageWidth, maxWidth);
+          let newHeight = newWidth / aspectRatio;
+          if (newHeight > maxHeight) {
+            newHeight = maxHeight;
+            newWidth = newHeight * aspectRatio;
+          }
+          image.style.width = newWidth + 'px';
+          image.style.height = newHeight + 'px';
+          titles.style.width = `${newWidth}px`;
+          caption.style.width = `${newWidth}px`;
+        }
+      }
+      let data = [];
+      let contentUnits = [];
+      let currentContentUnitIndex;
+      let selectedListItem;
+      const loadButton = document.getElementById('loadButton');
+      const helpButton = document.getElementById('helpButton');
+      helpButton.onclick = function() {
+        window.open('https://your-url.com', '_blank');
+        helpButton.blur();
+      };
+      loadButton.onclick = function() {
+        const url = document.getElementById('urlInput').value;
+        loadData(url);
+        document.getElementById('urlInput').blur();
+      };
+
+      function handleEnter(event) {
+        const enterKeyCode = 13;
+        if (event.keyCode === enterKeyCode) {
+          event.stopPropagation();
+          loadButton.click();
+          document.getElementById('urlInput').blur();
+        }
+      }
+
+      function loadData(url) {
+        fetch(url).then(response => {
+          if (!response.ok || response.headers.get("content-type") != "text/tab-separated-values") {
+            throw new Error('Not TSV data');
+          }
+          return response.text();
+        }).then(tsv => {
+          document.getElementById('bottomShelf-container').style.display = 'flex';
+          const rows = tsv.split('\n');
+          const title = rows[0].split('\t')[0];
+          document.title = title;
+          document.getElementById('pageTitle').textContent = title;
+          data = rows.slice(1).map(row => row.split('\t')).filter(cells => !(!cells[0] && ((cells[1] !== '') || (!cells[2] && !cells[3])))).map(cells => ({
+            item: cells[0],
+            caption: cells[2],
+            content1: cells[0],
+            imageLink: cells[3],
+            indent: cells[1] === '' ? 0 : cells[1] === '0' ? 0 : cells[1] < 0 ? parseInt(cells[1], 10) : 1,
+            isEmpty: cells[1] === ''
+          }));
+          let contentUnit = [];
+          let indentLevel = 0;
+          contentUnits = [];
+          currentContentUnitIndex = undefined;
+          selectedListItem = undefined;
+          const listElement = document.getElementById('list');
+          listElement.innerHTML = '';
+          data.forEach((row, index) => {
+            if (!row.isEmpty) {
+              if (contentUnit.length > 0) {
+                contentUnits.push({
+                  contentUnit,
+                  indentLevel
+                });
+              }
+              contentUnit = [row];
+            } else {
+              contentUnit.push(row);
+            }
+            indentLevel = Math.max(0, indentLevel + row.indent);
+            if (index === data.length - 1 && contentUnit.length > 0) {
+              contentUnits.push({
+                contentUnit,
+                indentLevel
+              });
+            }
+          });
+          contentUnits.forEach(({
+            contentUnit,
+            indentLevel
+          }, index) => {
+            const listItem = document.createElement('p');
+            listItem.classList.add('list-item');
+            const contentSpan = document.createElement('span');
+            contentSpan.textContent = contentUnit[0].item;
+            contentSpan.style.marginLeft = `${indentLevel * 9}px`;
+            const expandPlaceholder = document.createElement('span');
+            expandPlaceholder.classList.add('expand-placeholder');
+            contentSpan.prepend(expandPlaceholder);
+            listItem.appendChild(contentSpan);
+            const listItemWrapper = document.createElement('div');
+            listItemWrapper.style.whiteSpace = 'nowrap';
+            listItemWrapper.appendChild(listItem);
+            if (indentLevel > 0) {
+              listItemWrapper.style.display = 'none';
+            }
+            if (index < contentUnits.length - 1 && contentUnits[index + 1].indentLevel > indentLevel) {
+              const expandButton = document.createElement('button');
+              expandButton.textContent = '+';
+              expandButton.classList.add('expand-button');
+              expandButton.onclick = function(event) {
+                event.stopPropagation();
+                const isExpanded = expandButton.textContent === '−';
+                expandButton.textContent = isExpanded ? '+' : '−';
+                for (let i = index + 1; i < contentUnits.length; i++) {
+                  if (contentUnits[i].indentLevel === indentLevel + 1) {
+                    contentUnits[i].element.style.display = isExpanded ? 'none' : '';
+                    if (isExpanded) {
+                      const button = contentUnits[i].element.querySelector('.expand-button');
+                      if (button) {
+                        button.textContent = '+';
+                      }
+                    }
+                  } else if (contentUnits[i].indentLevel > indentLevel) {
+                    contentUnits[i].element.style.display = 'none';
+                    const button = contentUnits[i].element.querySelector('.expand-button');
+                    if (button) {
+                      button.textContent = '+';
+                    }
+                  } else {
+                    break;
+                  }
+                }
+                expandButton.blur();
+              };
+              contentSpan.replaceChild(expandButton, expandPlaceholder);
+            }
+            listItem.onclick = function() {
+              if (selectedListItem) {
+                selectedListItem.classList.remove('selected');
+              }
+              listItem.classList.add('selected');
+              selectedListItem = listItem;
+              if (index !== currentContentUnitIndex) {
+                const input = document.getElementById('rowInput');
+                input.value = "1";
+              }
+              displayContentUnit(index);
+            };
+            listElement.appendChild(listItemWrapper);
+            contentUnits[index].element = listItemWrapper;
+          });
+          if (contentUnits.length > 0) {
+            const firstListItem = listElement.firstChild.firstChild;
+            firstListItem.click();
+          }
+          document.getElementById('hotSpot').style.width = document.getElementById('bottomShelf').offsetWidth + 'px';
+        }).catch(error => {
+          document.getElementById('pageTitle').textContent = '';
+          document.title = 'sequence345';
+          document.getElementById('caption').textContent = 'Load TSV file to view content.';
+          document.getElementById('rowName').textContent = '';
+          let imageElement = document.getElementById('image');
+          imageElement.src = '';
+          imageElement.style.display = 'none';
+          document.getElementById('bottomShelf-container').style.display = 'none';
+          data = [];
+          contentUnits = [];
+          currentContentUnitIndex = undefined;
+          selectedListItem = undefined;
+          document.getElementById('list').innerHTML = '';
+        });
+      }
+
+      function displayContentUnit(index) {
+        const input = document.getElementById('rowInput');
+
+        function adjustInputWidth() {
+          const input = document.getElementById('rowInput');
+          input.style.width = `${Math.max(input.value.length, 1)}ch`;
+        }
+        input.addEventListener('input', adjustInputWidth);
+        adjustInputWidth();
+        const incrementButton = document.getElementById('increment');
+        const decrementButton = document.getElementById('decrement');
+        const rowIndex = input.value ? input.value - 1 : 0;
+        const contentUnit = contentUnits[index].contentUnit;
+        const row = contentUnit[rowIndex];
+        const firstRow = contentUnit[0];
+        const imageElement = document.getElementById('image');
+        const captionElement = document.getElementById('caption');
+        if (row.imageLink.trim() === '') {
+          imageElement.style.display = 'none';
+        } else {
+          imageElement.style.display = 'block';
+        }
+        if (row) {
+          imageElement.src = row.imageLink;
+          imageElement.addEventListener('load', adjustImageAndCaptionSize);
+          captionElement.innerHTML = row.caption;
+          const rowName = document.getElementById('rowName');
+          rowName.textContent = firstRow.content1;
+          if (rowIndex !== 0 && row.content1.trim() !== '') {
+            const additionalContent = document.createElement('span');
+            additionalContent.textContent = " \u00A0🢒\u00A0 " + row.content1;
+            rowName.appendChild(additionalContent);
+          }
+        } else {
+          imageElement.src = '';
+          captionElement.textContent = '';
+        }
+        const contentUnitLength = contentUnit.length;
+        if (contentUnitLength === 1) {
+          const bottomRowContainer = document.getElementById('bottomShelf-container');
+          bottomRowContainer.classList.remove('visible');
+        } else {
+          const bottomRowContainer = document.getElementById('bottomShelf-container');
+          bottomRowContainer.classList.add('visible');
+        }
+        const redDiv = document.getElementById('hotSpot');
+        if (contentUnitLength > 1) {
+          redDiv.style.display = 'none';
+        } else {
+          redDiv.style.display = 'block';
+        }
+        input.max = contentUnitLength;
+        incrementButton.disabled = rowIndex >= contentUnitLength - 1;
+        decrementButton.disabled = rowIndex <= 0;
+        if (contentUnitLength === 1) {
+          input.value = '1';
+          input.disabled = true;
+          incrementButton.disabled = true;
+          decrementButton.disabled = true;
+          disableContentUnitSize();
+        } else {
+          input.disabled = false;
+          enableContentUnitSize();
+        }
+        currentContentUnitIndex = index;
+        input.onblur = function() {
+          let value = parseInt(this.value, 10);
+          if (isNaN(value) || value === 0 || value > contentUnitLength) {
+            this.value = rowIndex + 1;
+          } else {
+            this.value = value;
+          }
+          displayContentUnit(index);
+        };
+        incrementButton.onclick = function() {
+          input.value = Math.min(contentUnitLength, rowIndex + 2);
+          displayContentUnit(index);
+        };
+        decrementButton.onclick = function() {
+          input.value = Math.max(1, rowIndex);
+          displayContentUnit(index);
+        };
+        const contentUnitSizeElement = document.getElementById('contentUnitSize');
+        contentUnitSizeElement.value = `${contentUnitLength}`;
+        contentUnitSizeElement.style.width = `${contentUnitLength.toString().length}ch`;
+        const rowInputElement = document.getElementById('rowInput');
+        rowInputElement.style.width = `${rowInputElement.value.length}ch`;
+        rowInputElement.addEventListener('input', function(e) {
+          this.value = this.value.replace(/[^0-9]/g, '');
+        });
+        rowInputElement.addEventListener('keydown', function(e) {
+          if (!e.ctrlKey && !e.metaKey && !['Backspace', 'Delete', 'Home', 'End', 'ArrowLeft', 'ArrowRight', 'Tab'].includes(e.key) && isNaN(Number(e.key))) {
+            e.preventDefault();
+          }
+        });
+        rowInputElement.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            this.blur();
+          }
+          if (['Enter', 'ArrowRight', 'ArrowLeft'].includes(e.key)) {
+            e.stopPropagation();
+          }
+          if (['-', '+'].includes(e.key)) {
+            e.preventDefault();
+          }
+        });
+      }
+
+      function disableContentUnitSize() {
+        const contentUnitSizeElement = document.getElementById('contentUnitSize');
+        contentUnitSizeElement.style.color = '#ccc';
+        const ofElement = document.getElementById('ofElement');
+        ofElement.style.color = '#ccc';
+      }
+
+      function enableContentUnitSize() {
+        const contentUnitSizeElement = document.getElementById('contentUnitSize');
+        contentUnitSizeElement.style.color = '';
+        const ofElement = document.getElementById('ofElement');
+        ofElement.style.color = '';
+      }
+      document.onkeydown = function(event) {
+        const downArrowKeyCode = 40;
+        const upArrowKeyCode = 38;
+        const leftArrowKeyCode = 37;
+        const rightArrowKeyCode = 39;
+        const enterKeyCode = 13;
+        if (event.keyCode === downArrowKeyCode) {
+          event.preventDefault();
+          const currentListItem = selectedListItem.parentElement;
+          const nextVisibleListItem = getNextVisibleListItem(currentListItem);
+          if (nextVisibleListItem) {
+            nextVisibleListItem.click();
+          }
+        } else if (event.keyCode === upArrowKeyCode) {
+          event.preventDefault();
+          const currentListItem = selectedListItem.parentElement;
+          const previousVisibleListItem = getPreviousVisibleListItem(currentListItem);
+          if (previousVisibleListItem) {
+            previousVisibleListItem.click();
+          }
+        } else if (event.keyCode === leftArrowKeyCode || event.keyCode === rightArrowKeyCode) {
+          const input = document.getElementById('rowInput');
+          const rowIndex = input.value ? input.value - 1 : 0;
+          const contentUnit = contentUnits[currentContentUnitIndex].contentUnit;
+          const contentUnitLength = contentUnit.length;
+          if (contentUnitLength > 1) {
+            event.preventDefault();
+            if (event.keyCode === leftArrowKeyCode) {
+              if (rowIndex > 0) {
+                input.value = rowIndex;
+                displayContentUnit(currentContentUnitIndex);
+              }
+            } else if (event.keyCode === rightArrowKeyCode) {
+              if (rowIndex < contentUnitLength - 1) {
+                input.value = rowIndex + 2;
+                displayContentUnit(currentContentUnitIndex);
+              }
+            }
+          }
+        } else if (event.keyCode === enterKeyCode) {
+          const expandButton = selectedListItem.querySelector('.expand-button');
+          if (expandButton) {
+            expandButton.click();
+          }
+        }
+      };
+
+      function getNextVisibleListItem(currentListItem) {
+        let nextSibling = currentListItem.nextElementSibling;
+        while (nextSibling) {
+          if (nextSibling.style.display !== 'none') {
+            return nextSibling.firstChild;
+          }
+          nextSibling = nextSibling.nextElementSibling;
+        }
+        return null;
+      }
+
+      function getPreviousVisibleListItem(currentListItem) {
+        let previousSibling = currentListItem.previousElementSibling;
+        while (previousSibling) {
+          if (previousSibling.style.display !== 'none') {
+            return previousSibling.firstChild;
+          }
+          previousSibling = previousSibling.previousElementSibling;
+        }
+        return null;
+      }
+      document.getElementById('sequence345front').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+      });
+      const urlInput = document.getElementById('urlInput');
+      urlInput.addEventListener('keydown', handleEnter);
+      loadData(urlInput.value);
+      const redDiv = document.getElementById('hotSpot');
+      const bottomRowContainer = document.getElementById('bottomShelf-container');
+      redDiv.addEventListener('mouseenter', function() {
+        bottomRowContainer.classList.add('visible');
+      });
+      redDiv.addEventListener('mouseleave', function() {
+        bottomRowContainer.classList.remove('visible');
+      });
+
+      function updateLayout() {
+        const leftContainer = document.getElementById('left');
+        const rightContainer = document.getElementById('right');
+        const topRow = document.getElementById('topShelf');
+        const middleContent = document.getElementById('middleShelf');
+        const bottomRow = document.getElementById('bottomShelf');
+        leftContainer.style.width = '200px';
+        rightContainer.style.width = 'calc(100% - 200px)';
+        topRow.style.justifyContent = 'flex-end';
+        topRow.style.marginBottom = '20px';
+        topRow.style.paddingRight = '20px';
+        middleContent.style.marginBottom = 'auto';
+        bottomRow.style.justifyContent = 'center';
+        bottomRow.style.alignItems = 'center';
+      }
+      updateLayout();
+      window.addEventListener('resize', updateLayout);
+    </script>
+  </body>
+</html>
