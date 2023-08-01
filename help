@@ -65,7 +65,7 @@
             <li> Column 1 = Item Name</li>
             <li> Column 2 = Indentation*</li>
             <li> Column 3 = Text</li>
-            <li> Column 4 = Image LInk</li>
+            <li> Column 4 = Image Link</li>
           </ul>
           <p>*Negative values un-indent. <br> *Leave empty to accumulate a series. </p>
         </div>
