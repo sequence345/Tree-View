@@ -436,9 +436,12 @@
 
       function loadData(url) {
         fetch(url).then(response => {
-          if (!response.ok || response.headers.get("content-type") != "text/tab-separated-values") {
-            throw new Error('Not TSV data');
-          }
+        
+          if (!response.ok || !(response.headers.get("content-type").includes("text/tab-separated-values") || response.headers.get("content-type").includes("text/plain"))) {
+    throw new Error('Not TSV data');
+}
+
+          
           return response.text();
         }).then(tsv => {
           document.getElementById('bottomShelf-container').style.display = 'flex';
